@@ -5,6 +5,10 @@ This python script attempts to implement a controller of for the
 cryomech CP-2800/CP-1000 controller. Detailed implantation/documents 
 are in the pt415.py file. The module is developed under python2.
 
+Warning / error output will be directed to stderr. There is a debug
+flag in the script (DEBUG = False) which if turned on, will make the
+output very verbose (although debug output is also directed to stderr).
+
 For a simple run, just load the script by
 
 bash4.2$ python -i pt415.py
@@ -79,3 +83,6 @@ will append new logs to "run1.log" with a 6 logs/minute rate
 >>> d.log() 
 will create a new file "20171208132840.log" (the actual time of me writing this
 document) and write logs into it with an 1 log/10minutes rate.
+
+
+
