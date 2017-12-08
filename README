@@ -1,0 +1,81 @@
+Filename: README
+Author: Weiyang Wang <wew168@ucsd.edu>
+
+This python script attempts to implement a controller of for the
+cryomech CP-2800/CP-1000 controller. Detailed implantation/documents 
+are in the pt415.py file. The module is developed under python2.
+
+For a simple run, just load the script by
+
+bash4.2$ python -i pt415.py
+
+which would load the entire script in the interpretor. For more 
+complicated uses please use import. 
+
+To initiate a controller run
+
+>>> d = PT415("/dev/ttyXXXX"") 
+
+where the argument is the address of the serial port that the CP1000/2800 
+is on. Other arguments such as baudrate/timeout can also be specified.
+
+To start/stop the controller, run 
+
+>>> d.start()
+>>> d.stop()
+
+To read the status/runtime of the controller, run
+
+>>> d.status()
+>>> d.runtime()
+
+There are merely the convenient wrapper provided; for more commands
+please check the CP1000/2800 manual and use the proper hashcode/index pair.
+For a writing command use 
+>>> d.writevar(code, index, vale)
+For a reading command use
+>>> ret = d.readvar(code, index)
+
+for more detail please check the actual implementation.
+
+A logger function is provided for monitoring the controller. The default
+logger will monitor the following entries (in a csv format):
+    -Time
+    -Unix Time
+    -Elapsed time (min)
+    -Input H2O Temp (C)
+    -Output H2O Temp (C)
+    -Helium Temp (C)
+    -Oil Temp (C)
+    -High Side Pressure (PSIA)
+    -Low Side Pressure (PSIA)
+the logger function is called "log" and has the following header:
+    
+    def log(interval = 600, flag = 'w', filename = None)
+
+interval specifies the time interval between two log entries in seconds.
+
+flag is the file opening flag, which should be a string of either 'w' or 'a'.
+Under 'w' flag, a new file with @filename will be created (or if @filename is
+None, a file with default filename will be created) for logging. If a file 
+with the same name already exist, it will be overwritten. 
+Under 'a' flag, if the file with @filename already exist, new log entries 
+be appended to this file. If the file with filename does not exist or @filename
+is None, it will behave the same as a 'w' flag. For a existing file with empty
+header line, a new header line will be written.
+
+filename specifies the name of the file that log will be written to.
+If it's None, a file with the name "yyyymmddhhmmss.log" with the current
+time of log starting will be used.
+
+The log function runs indefinitely until a ctrl-c (SIGINT) signal is caught.
+
+Example:
+>>> d.log(1, filename = "run1.log")
+will create/overwrite a file named "run1.log" and write entries into it,
+with an 1 log/second rate.
+>>> d.log(10, 'a'. "run1.log")
+will append new logs to "run1.log" with a 6 logs/minute rate
+>>> d.log() 
+will create a new file "20171208132840.log" (the actual time of me writing this
+document) and write logs into it with an 1 log/10minutes rate.
